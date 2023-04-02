@@ -1,0 +1,56 @@
+[package]
+name = "vulkan_rust_test"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[dependencies]
+ash = "0.37.2"
+num = "0.4.0"
+shaderc = "0.8.2"
+winit = "0.27.5"
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3.9", features = ["windef", "libloaderapi"] }
+
+[[bin]]
+name = "00"
+path = "src/learning/class00.rs"
+
+[[bin]]
+name = "01"
+path = "src/learning/class01.rs"
+
+[[bin]]
+name = "02"
+path = "src/learning/class02.rs"
+
+[[bin]]
+name = "03"
+path = "src/learning/class03.rs"
+
+[[bin]]
+name = "04"
+path = "src/learning/class04.rs"
+
+[[bin]]
+name = "05"
+path = "src/learning/class05.rs"
+
+[[bin]]
+name = "06"
+path = "src/learning/class06.rs"
+
+[[bin]]
+name = "07"
+path = "src/learning/class07.rs"
+
+[[bin]]
+name = "09"
+path = "src/learning/class09.rs"
+
+[[bin]]
+name = "10"
+path = "src/learning/class10.rs"
