@@ -91,7 +91,10 @@ pub fn create_logical_device(instance: &ash::Instance, physical_device: vk::Phys
         .queue_family_index(indices.graphics_family.unwrap())
         .queue_priorities(&queue_priorities);
     
-    let physical_device_features = vk::PhysicalDeviceFeatures::builder();
+    let mut buffer_device_address_feature = vk::PhysicalDeviceBufferDeviceAddressFeatures::builder()
+        .buffer_device_address(true);
+    let mut physical_device_features = vk::PhysicalDeviceFeatures2::builder()
+        .push_next(&mut buffer_device_address_feature);
 
     let enabled_layer_names_c: Vec<CString> = validation_info
         .required_validation_layers
@@ -109,8 +112,8 @@ pub fn create_logical_device(instance: &ash::Instance, physical_device: vk::Phys
     let mut device_create_info = vk::DeviceCreateInfo::builder()
         .flags(vk::DeviceCreateFlags::empty())
         .queue_create_infos(std::slice::from_ref(&queue_create_info))
-        .enabled_features(&physical_device_features)
-        .enabled_extension_names(&enabled_extension_names);
+        .enabled_extension_names(&enabled_extension_names)
+        .push_next(&mut physical_device_features);
 
     if validation_info.enabled
     {
@@ -182,12 +185,6 @@ fn iterate_select_device(instance: &ash::Instance, last_device: Option<vk::Physi
     let device_properties = unsafe {
         instance.get_physical_device_properties(current_device)
     };
-    // let device_features = unsafe {
-    //     instance.get_physical_device_features(current_device)
-    // };
-    // let device_families = unsafe {
-    //     instance.get_physical_device_queue_family_properties(current_device)
-    // };
     let (device_type_name, device_type_score) = match device_properties.device_type{
         vk::PhysicalDeviceType::DISCRETE_GPU => ("Discrete GPU", 4),
         vk::PhysicalDeviceType::INTEGRATED_GPU => ("Integrate GPU", 3),
@@ -264,3 +261,64 @@ fn is_device_support_extensions(instance: &ash::Instance, physical_device: vk::P
 
     return support;
 }
+
+pub fn create_image_views_2d(
+    logical_device: &ash::Device,
+    image_format: vk::Format,
+    images: &Vec<vk::Image>,
+) -> Vec<vk::ImageView>
+{
+    let mut result_image_views = vec![];
+
+    for &image in images.iter()
+    {
+        let image_view_create_info = vk::ImageViewCreateInfo::builder()
+            .flags(vk::ImageViewCreateFlags::empty())
+            .view_type(vk::ImageViewType::TYPE_2D)
+            .format(image_format)
+            .components(vk::ComponentMapping{
+                r: vk::ComponentSwizzle::IDENTITY,
+                g: vk::ComponentSwizzle::IDENTITY,
+                b: vk::ComponentSwizzle::IDENTITY,
+                a: vk::ComponentSwizzle::IDENTITY,
+            })
+            .subresource_range(vk::ImageSubresourceRange{
+                aspect_mask: vk::ImageAspectFlags::COLOR,
+                base_mip_level: 0,
+                level_count: 1,
+                base_array_layer: 0,
+                layer_count: 1,
+            })
+            .image(image);
+
+        let image_view = unsafe{
+            logical_device
+                .create_image_view(&image_view_create_info, None)
+                .expect("Vulkan Failed To Create Image View")
+        };
+
+        result_image_views.push(image_view);
+    }
+
+    result_image_views
+}
+
+pub fn create_framebuffer(device: &ash::Device
+    , render_pass: vk::RenderPass
+    , image_views: &[vk::ImageView]
+    , extent: &vk::Extent2D) -> vk::Framebuffer
+{
+    let frame_buffer_create_info = vk::FramebufferCreateInfo::builder()
+        .render_pass(render_pass)
+        .attachments(image_views)
+        .width(extent.width)
+        .height(extent.height)
+        .layers(1);
+
+    unsafe{
+        device
+            .create_framebuffer(&frame_buffer_create_info, None)
+            .expect("Failed To Create Framebuffer")
+    }
+}
+

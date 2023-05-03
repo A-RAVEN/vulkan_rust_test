@@ -8,6 +8,8 @@ edition = "2021"
 
 [dependencies]
 ash = "0.37.2"
+gpu-allocator = "0.22.0"
+memoffset = "0.8.0"
 num = "0.4.0"
 shaderc = "0.8.2"
 winit = "0.27.5"
