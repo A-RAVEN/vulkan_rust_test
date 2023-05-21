@@ -8,6 +8,7 @@ edition = "2021"
 
 [dependencies]
 ash = "0.37.2"
+glam = "0.24.0"
 gpu-allocator = "0.22.0"
 memoffset = "0.8.0"
 num = "0.4.0"
@@ -18,41 +19,5 @@ winit = "0.27.5"
 winapi = { version = "0.3.9", features = ["windef", "libloaderapi"] }
 
 [[bin]]
-name = "00"
-path = "src/learning/class00.rs"
-
-[[bin]]
-name = "01"
-path = "src/learning/class01.rs"
-
-[[bin]]
-name = "02"
-path = "src/learning/class02.rs"
-
-[[bin]]
-name = "03"
-path = "src/learning/class03.rs"
-
-[[bin]]
-name = "04"
-path = "src/learning/class04.rs"
-
-[[bin]]
-name = "05"
-path = "src/learning/class05.rs"
-
-[[bin]]
-name = "06"
-path = "src/learning/class06.rs"
-
-[[bin]]
-name = "07"
-path = "src/learning/class07.rs"
-
-[[bin]]
-name = "09"
-path = "src/learning/class09.rs"
-
-[[bin]]
-name = "10"
-path = "src/learning/class10.rs"
+name = "main"
+path = "src/learning/main.rs"

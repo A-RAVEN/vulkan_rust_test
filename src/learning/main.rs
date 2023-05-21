@@ -3,6 +3,7 @@ use gpu_allocator::d3d12::AllocatorCreateDesc;
 use winit::event::{Event, VirtualKeyCode, ElementState, KeyboardInput, WindowEvent};
 use winit::event_loop::{EventLoop, ControlFlow};
 use winit::window::Window;
+use glam::{Vec2, Vec3};
 
 use ash::vk::{self, PipelineShaderStageCreateFlags, ShaderStageFlags
     , PrimitiveTopology, Offset2D, CullModeFlags, FrontFace
@@ -24,8 +25,8 @@ use gpu_allocator::vulkan;
 #[derive(Debug, Clone)]
 struct Vertex
 {
-    pos: [f32; 2],
-    color: [f32; 3],
+    pos: Vec2,//[f32; 2],
+    color: Vec3,//[f32; 3],
 }
 
 impl Vertex
@@ -58,16 +59,16 @@ impl Vertex
 const VERTICES_DATA: [Vertex; 3] = 
 [
     Vertex{
-        pos: [0.0, -0.5],
-        color: [1.0, 0.0, 0.0],
+        pos: Vec2::new(0.0, -0.5),//[0.0, -0.5],
+        color: Vec3::new(1.0, 0.0, 0.0),//[1.0, 0.0, 0.0],
     },
     Vertex{
-        pos: [0.5, 0.5],
-        color: [0.0, 1.0, 0.0],
+        pos: Vec2::new(0.5, 0.5),//[0.5, 0.5],
+        color: Vec3::new(0.0, 1.0, 0.0),//[0.0, 1.0, 0.0],
     },
     Vertex{
-        pos: [-0.5, 0.5],
-        color: [0.0, 0.0, 1.0],
+        pos: Vec2::new(-0.5, 0.5),//[-0.5, 0.5],
+        color: Vec3::new(0.0, 0.0, 1.0),//[0.0, 0.0, 1.0],
     },
 ];
 struct VulkanApp
