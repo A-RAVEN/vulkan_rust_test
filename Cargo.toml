@@ -8,6 +8,7 @@ edition = "2021"
 
 [dependencies]
 ash = "0.37.2"
+fbxcel-dom = "0.0.10"
 glam = "0.24.0"
 gpu-allocator = "0.22.0"
 memoffset = "0.8.0"
