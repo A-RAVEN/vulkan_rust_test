@@ -373,23 +373,21 @@ impl VulkanApp
     }
 
     fn create_graphics_pipeline(device: &ash::Device, swapchain_context: &SwapchainContext, render_pass: vk::RenderPass) -> (vk::Pipeline, vk::PipelineLayout) {
-        let shader_src_vert = load_and_compile_shader_src("shaders/testVertexBuffer.glsl", ShaderType::Vertex);
-        let shader_src_frag = load_and_compile_shader_src("shaders/testVertexBuffer.glsl", ShaderType::Fragment);
+        let shader_src_vert = load_and_compile_shader_src("shaders/testShader.glsl", ShaderType::Vertex);
+        let shader_src_frag = load_and_compile_shader_src("shaders/testShader.glsl", ShaderType::Fragment);
 
-        let vertex_module = VulkanApp::create_shader_module(&device, shader_src_vert.as_binary());
-        let fragment_module = VulkanApp::create_shader_module(&device, shader_src_frag.as_binary());
-
-        let main_function_name = CString::new("main").unwrap();
+        let vertex_module = VulkanApp::create_shader_module(&device, shader_src_vert.compiledData.as_binary());
+        let fragment_module = VulkanApp::create_shader_module(&device, shader_src_frag.compiledData.as_binary());
 
         let shader_stage = [vk::PipelineShaderStageCreateInfo::builder()
             .flags(PipelineShaderStageCreateFlags::empty())
             .module(vertex_module)
-            .name(&main_function_name)
+            .name(&shader_src_vert.entryPoint)
             .stage(ShaderStageFlags::VERTEX).build(),
             vk::PipelineShaderStageCreateInfo::builder()
             .flags(PipelineShaderStageCreateFlags::empty())
             .module(fragment_module)
-            .name(&main_function_name)
+            .name(&shader_src_frag.entryPoint)
             .stage(ShaderStageFlags::FRAGMENT).build()];
 
         let vertex_binding_description = Vertex::get_binding_description();

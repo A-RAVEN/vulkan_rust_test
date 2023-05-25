@@ -1,38 +1,39 @@
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
+
 #if SHADER_FREQUENCY_VERTEX
-out gl_PerVertex
-{
+#define VERTEX_INPUT(locationId, dataType, name) layout(location = locationId) in dataType name;
+#define VERTEX_TO_FRAGMENT(locationId, dataType, name) layout(location = locationId) out dataType name;
+#define FRAGMENT_OUTPUT(locationId, dataType, name) dataType name;
+#define vert ENTRY_POINT
+#endif
+
+#if SHADER_FREQUENCY_FRAGMENT
+#define VERTEX_INPUT(locationId, dataType, name) dataType name;
+#define VERTEX_TO_FRAGMENT(locationId, dataType, name) layout(location = locationId) in dataType name;
+#define FRAGMENT_OUTPUT(locationId, dataType, name) layout(location = locationId) out dataType name;
+#define frag ENTRY_POINT
+#endif
+
+VERTEX_INPUT(0, vec2, input_Position)
+VERTEX_INPUT(1, vec3, input_Color)
+VERTEX_TO_FRAGMENT(0, vec3, v2f_Color)
+FRAGMENT_OUTPUT(0, vec4, outColor)
+
+#if SHADER_FREQUENCY_VERTEX
+out gl_PerVertex {
     vec4 gl_Position;
 };
-
-layout(location = 0) out vec3 fragColor;
-
-vec2 positions[3] = vec2[](
-    vec2(0.0, -0.5),
-    vec2(0.5, 0.5),
-    vec2(-0.5, 0.5)
-);
-
-vec3 color[3] = vec3[](
-    vec3(1.0, 0.0, 0.0),
-    vec3(0.0, 1.0, 0.0),
-    vec3(0.0, 0.0, 1.0)
-);
-
-void main(){
-    gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
-    fragColor = color[gl_VertexIndex];
+void vert()
+{
+    gl_Position = vec4(input_Position, 0, 1);
+    v2f_Color = input_Color;
 }
-
 #endif//SHADER_FREQUENCY_VERTEX
 
 #if SHADER_FREQUENCY_FRAGMENT
-layout(location = 0) in vec3 fragColor;
-layout(location = 0) out vec4 outColor;
-
-void main()
+void frag()
 {
-    outColor = vec4(fragColor, 1.0);
+    outColor = vec4(v2f_Color, 1.0);
 }
 #endif//SHADER_FREQUENCY_FRAGMENT

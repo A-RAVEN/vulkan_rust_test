@@ -23,8 +23,6 @@ use winit::event_loop::{EventLoop, ControlFlow};
 
 
 fn main() {
-    let contents = fs::read_to_string("testStr.txt");
-    println!("Text: {0}", contents.unwrap());
 
     let window_context = WindowContext::new(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
     let vulkan_app = VulkanApp::new(&window_context.window, WINDOW_TITLE);
